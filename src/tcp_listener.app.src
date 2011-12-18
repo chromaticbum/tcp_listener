@@ -1,0 +1,10 @@
+{application, tcp_listener,
+  [
+    {description, "TCP Socket Listener"},
+    {vsn, "0.0.1"},
+    {modules, [tcp_listener, tcp_listener_sup, tcp_listener_app]},
+    {registered, [tcp_listener_sup]},
+    {applications, [kernel, stdlib]},
+    {env, []},
+    {mod, {tcp_listener_app, []}}
+  ]}.
