@@ -37,8 +37,8 @@
 behaviour_info(callbacks) ->
   [
     {create, 1},
-    {stop, 1},
-    {recv, 2}
+    {terminate, 1},
+    {handle_data, 2}
   ].
 
 %%%------------------------------------------------------------------------
@@ -95,8 +95,10 @@ socket_wait(Other, State) ->
 
 
 hello({data, Data}, #tcp_server{module = Module, info = Info} = State) ->
-  Module:recv(Info, Data),
-  {next_state, data, State, ?TIMEOUT};
+  case Module:handle_data(Info, Data) of
+    {ok, Info2} -> {next_state, data, State#tcp_server{info = Info2}, ?TIMEOUT};
+    {stop, Reason} -> {stop, Reason, State}
+  end;
 hello(timeout, State) ->
   error_logger:error_msg("~p Client connection timeout - closing.\n", [self()]),
   {stop, normal, State};
@@ -155,7 +157,7 @@ handle_info(_Info, StateName, StateData) ->
 %% @private
 %%-------------------------------------------------------------------------
 terminate(_Reason, _StateName, #tcp_server{socket = Socket, module = Module, info = Info}) ->
-  Module:stop(Info),
+  Module:terminate(Info),
   (catch gen_tcp:close(Socket)),
   ok.
 
