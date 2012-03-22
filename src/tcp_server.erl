@@ -148,7 +148,7 @@ handle_info({tcp_closed, Socket}, _StateName,
   {stop, normal, StateData};
 
 handle_info(_Info, StateName, StateData) ->
-  {noreply, StateName, StateData}.
+  {next_state, StateName, StateData}.
 
 %%-------------------------------------------------------------------------
 %% Func: terminate/3
