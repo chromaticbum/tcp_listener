@@ -96,7 +96,7 @@ socket_wait(Other, State) ->
 
 hello({data, Data}, #tcp_server{module = Module, info = Info} = State) ->
   case Module:handle_data(Info, Data) of
-    {ok, Info2} -> {next_state, data, State#tcp_server{info = Info2}, ?TIMEOUT};
+    {ok, Info2} -> {next_state, hello, State#tcp_server{info = Info2}, ?TIMEOUT};
     {stop, Reason} -> {stop, Reason, State}
   end;
 hello(timeout, State) ->

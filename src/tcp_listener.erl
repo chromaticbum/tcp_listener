@@ -28,7 +28,7 @@ create(Port, Module) ->
   tcp_listener_sup:start_child(Port, Module).
 
 start_link(Port, Module) when is_integer(Port), is_atom(Module) ->
-  gen_server:start_link({local, ?MODULE}, ?MODULE, [Port, Module], []).
+  gen_server:start_link(?MODULE, [Port, Module], []).
 
 init([Port, Module]) ->
   process_flag(trap_exit, true),
